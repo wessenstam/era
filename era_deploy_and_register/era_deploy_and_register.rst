@@ -13,27 +13,24 @@ Overview
 
 In this exercise you will deploy Nutanix Era and register your Nutanix cluster.
 
-Pre-requirements
-++++++++++++++++
+Nutanix Era is a software suite that automates and simplifies database administration – bringing One Click simplicity and invisible operations to database provisioning and lifecycle management (LCM).
 
-To be able to run the workshops you need to have the following available or installed
+With One Click database provisioning and Copy Data Management (CDM) as its first services, Nutanix Era enables DBAs to provision, clone, refresh, and backup their databases to any point in time. Line of business applications in every vertical depend on databases, providing use cases in both production and non-production environments.
 
-A public ssh key of your machine by using :ref:'sshkey_creation'
+**In this lab you will explore how Era can be used to standardize database deployment, allow for rapid cloning from a production database to a clone used for application development, updating that clone based on production data, and finally leveraging the REST API to understand how Era can integrate with a customer's existing automation tools.**
 
-pgAdmin 4 (This can be downloaded and installed for your OS from https://www.pgadmin.org/download/).
-
-.. note::
-
-  The screenshots in this Workshop are created using a Windows 7 machine. For the Mac OS/X it may be different. An example is the way to create a ssh key pair. Differences will be in writing and may contain a screenshot for clarification where possible.
-
-Deploy ERA VM
+Deploying Era
 +++++++++++++
 
-Deploy Era VM from Prism Central.
+Era is distributed as a virtual appliance that can be installed on either AHV or ESXi. In this lab you will deploy Era to your AHV cluster.
 
-In **Prism Central > VMs > List**, click **Create VM**.
+In **Prism Central**, select :fa:`bars` **> Virtual Infrastructure > VMs**.
 
-Fill out the following fields and click **Save**:
+.. figure:: images/2a.png
+
+Click **Create VM**.
+
+Fill out the following fields:
 
 - **Name** - Era-*Initials*
 - **Description** - (Optional) Description for your VM.
@@ -44,7 +41,7 @@ Fill out the following fields and click **Save**:
 - Select **+ Add New Disk**
     - **Type** - DISK
     - **Operation** - Clone from Image Service
-    - **Image** - **“Era-Server-build…”**.qcow2
+    - **Image** - Era.qcow2
     - Select **Add**
 
 - Select **Add New NIC**
@@ -53,53 +50,59 @@ Fill out the following fields and click **Save**:
 
 Click **Save** to create the VM.
 
-Select the Nutanix Era VM you created and click **Power On**.
+Select your Era VM and click **Power On**.
 
-.. figure:: images/2.png
+.. figure:: images/2b.png
 
-Register Cluster with Nutanix ERA
-+++++++++++++++++++++++++++++++++
+Registering a Cluster
++++++++++++++++++++++
 
-In **Prism Central > VMs > List**, indentify the IP Address assigned to the Era VM you just deployed (“IP Addresses” column).
+In **Prism Central > VMs > List**, identify the IP address assigned to your Era VM using the **IP Addresses** column.
 
-.. note::
-
-  If the IP address does not populate, log into the console of the VM and Run “ifconfig” to see the assigned IP address'
-  - **Username - Era
-  - **Password - Nutanix.1
-
-In a new browser tab, log on to Era https://ERA-IP:8443/ using these credentials:
+Open \https://*ERA-VM-IP:8443*/ in a new browser tab.
 
 .. note::
 
-  It may take a **couple minutes** for the Era interface to initialize after booting the VM.
+  It may take up to 2 minutes for the Era interface to initialize after booting the VM.
 
-  Check off “I have read and agree to terms and conditions.” And select **Continue**
+Select **I have read and agree to terms and conditions** and click **Continue**.
+
+Enter **techX2019!** as the **admin** password and click **Set Password**.
+
+Login using the following credentials:
 
 - **Username** - admin
-- **Password** - Set new admin password **techX2019!**
+- **Password** - techX2019!
 
-.. figure:: images/3.png
+On the **Welcome to Era** page, fill in the following information:
 
-At the "Welcome to Era" screen, fill in the following information and click **Next**:
-
-- **Name** - HPOC Cluster Name
+- **Name** - *Your Cluster Name*
 - **Description** - (Optional) Description
-- **IP address of Prism Element** - *HPOC Cluster IP*
+- **Address** - *Your Prism Element Cluster IP*
 - **Prism Element Administrator** - admin
 - **Password** - techX2019!
 
-Click **Next**
+.. figure:: images/3b.png
 
-Select the container named **“default…”** and click **Next**.
+.. note::
 
-For the Network Profile choose **Primary** and leave Manage IP Address Pool in Era unchecked.
+  Era requires a Prism Element account with full administrator access. For ESXi clusters, vCenter must also be registered with Prism Element.
 
 Click **Next**.
 
-Setup of Era will proceed automatically and takes a couple minutes.
+Select the **Default** storage container and click **Next**.
 
-Once complete select **Get Started**.
+.. figure:: images/3c.png
+
+Select the **Primary** VLAN. This is the default network profile that Era will use when provisioning new databases. Do **not** select **Manage IP Address Pool**, as your AHV cluster already has IPAM (DHCP) configured for that network.
+
+.. figure:: images/3d.png
+
+Click **Next**.
+
+Once Era setup has completed, click **Get Started**.
+
+.. figure:: images/3e.png
 
 Takeaways
 ++++++++++
