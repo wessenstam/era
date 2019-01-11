@@ -79,7 +79,7 @@ While waiting for the clone to complete, explore **Era > SLAs** to understand th
 
 .. figure:: images/21b.png
 
-Following the completion of the clone operation, you can connect to the clone instance as described in the previous section, `Connecting to the Database`_.
+Following the completion of the clone operation, you can connect to the clone instance as described in the previous section.
 
 .. figure:: images/23a.png
 
