@@ -1,8 +1,8 @@
 .. _sshkey_creation:
 
-----------------------
-Calm: SSH Key Creation
-----------------------
+----------------
+SSH Key Creation
+----------------
 
 Overview
 ++++++++
@@ -17,16 +17,22 @@ MacOS / Linux
 SSH Key Creation
 ................
 
-Open up your terminal of choice, and type in *ssh-keygen -t rsa -f ~/[KEY_FILENAME] -C [USERNAME]*.  After hitting enter, follow the prompts.  Note: Using a passphrase on your key is **only** supported if your Prism Central version is greater than or equal to 5.8.1, otherwise a passphrase **cannot** be used.  The below example will not use a passphrase as this will work on all Prism Central versions.
+Open up your terminal of choice, and type in *ssh-keygen -t rsa -f ~/[KEY_FILENAME] -C [USERNAME]*. After hitting enter, follow the prompts.
+
+.. note::
+
+  Using a passphrase on your key is **only** supported if your Prism Central version is greater than or equal to 5.8.1, otherwise a passphrase **cannot** be used.
+
+  The below example will not use a passphrase as this will work on all Prism Central versions.
 
 .. code-block:: bash
 
-   $ ssh-keygen -t rsa -f ~/calmkey -C centos@nutanix.com
+   $ ssh-keygen -t rsa -f ~/ntnxkey -C centos@nutanix.com
    Generating public/private rsa key pair.
    Enter passphrase (empty for no passphrase):
    Enter same passphrase again:
-   Your identification has been saved in /Users/michael.haigh/calmkey.
-   Your public key has been saved in /Users/michael.haigh/calmkey.pub.
+   Your identification has been saved in /Users/michael.haigh/ntnxkey.
+   Your public key has been saved in /Users/michael.haigh/ntnxkey.pub.
    The key fingerprint is:
    SHA256:WFAeoxKbQqFf8qt0F8za9tt3KfXf69LJuESG/N4jy+o centos@nutanix.com
    The key's randomart image is:
@@ -83,11 +89,15 @@ When working through Calm blueprints and application launches, you'll need the u
 Accessing the Public Key
 ........................
 
-Depending on the cloud that you're deploying onto, the public SSH key will be used in different places.  For AHV launches, there's a **INSTANCE_PUBLIC_KEY** macro that you'll paste the key into, and for GCP there's a **SSH KEYS** section.  You'll want to copy the entire single line of the public key (starting with **ssh-rsa** and ending with the username and domain), without any new lines.
+Depending on the cloud that you're deploying onto, the public SSH key will be used in different places.
+
+For AHV launches, there's a **INSTANCE_PUBLIC_KEY** macro that you'll paste the key into, and for GCP there's a **SSH KEYS** section.
+
+You'll want to copy the entire single line of the public key (starting with **ssh-rsa** and ending with the username and domain), without any new lines.
 
 .. code-block:: bash
 
-   $ cat calmkey.pub
+   $ cat ntnxkey.pub
    ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDDoJlPj+ACPyHGm0f+FyTQPRt+m1H6JstyLtvFJUntDyF2/dqpcQ9QfKKw1QcjzGdSS8B6HrdOOjKZz42j01/YLWFy2YrDLQOHcNJi6XowCQ059C7bHehP5lqNN6bRIzdQnqGZGYi8iKYzUChMVusfsPd5ZZo0rHCAiCAP1yFqrcSmq83QNN1X8FZ1COoMB66vKyD2rEoeKz4lilEeWKyP4RLmkOc1eMYQNdyMOCNFFbKmC1nPJ+Mpxo1HfNR84R7WNl5oEaNQOORN+NaOzu5Bxim2hhJvU37J+504azZ1PCUiHiC0+zBw4JfeOKMvtInmkEZQEd3y4RrIHLXKB4Yb centos@nutanix.com
 
 
