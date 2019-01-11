@@ -17,6 +17,7 @@
   era_deploy_and_register/era_deploy_and_register
   era_provision_postgresdb/era_provision_postgresdb
   era_clone_postgresdb/era_clone_postgresdb
+  era_rest_api/era_rest_api
 
 .. toctree::
   :maxdepth: 2
@@ -49,8 +50,7 @@ Agenda
     - Era: Deploy and Register
     - Era: Provision Postgres DB
     - Era: Clone Postgres DB
-    - Calm: Windows Blueprint
-    - Calm: Marketplace
+    - Era: REST API Explorer
 
 - Optional Labs
     - SSHKey Creation
