@@ -2,8 +2,8 @@
 
 .. toctree::
   :maxdepth: 2
-  :caption: Era Tech Summit 2019 Lab
-  :name: _era_tech_summit_2019_lab
+  :caption: Era METI Quarterly Come Together Lab
+  :name: _era_tech_meti_lab
   :hidden:
 
   era/era
