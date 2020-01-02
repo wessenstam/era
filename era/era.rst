@@ -17,12 +17,69 @@ Nutanix Era is a software suite that automates and simplifies database administr
 
 With One Click database provisioning and Copy Data Management (CDM) as its first services, Nutanix Era enables DBAs to provision, clone, refresh, and backup their databases to any point in time. Line of business applications in every vertical depend on databases, providing use cases in both production and non-production environments.
 
-**In this lab you will explore how Era can be used to standardize database deployment, allow for rapid cloning from a production database to a clone used for application development, updating that clone based on production data, and finally leveraging the REST API to understand how Era can integrate with a customer's existing automation tools.**
+**In this lab you will explore how Era can be used to standardize database deployment, allow for rapid cloning from a production database to a clone used for application development, updating that clone based on production data.**
+
+Pre-Requisite
++++++++++++++
+
+In this module we can use one of the ToolsVMs that have been pre-uploaded as qcow2 images to your assigned cluster. This way we don't have to install anything on your machine. You can use your own machine, but need to have **pgAdmin** installed. This can be downloaded from: https://www.pgadmin.org/download/ for your O/S. An alternative to this tool could be DBVisualiser (http://www.dbvis.com) This tool is capable of connecting to multiple Databases using one tool. Downside is that it uses Java as its platform.
+
+If you want to deploy the Windows ToolsVM follow the next steps, if not, proceed to :ref:`deploy_era`
+
+Deploy the Windows ToolsVM
+--------------------------
+
+The ToolsVM is a Windows Server 2012 R2 image comes pre-installed with a number of tools, including:
+
+- Microsoft Remote Server Administration Tools (RSAT)
+- PuTTY, CyberDuck, WinSCP
+- Sublime Text 3, Visual Studio Code
+- OpenOffice
+- Python
+- pgAdmin
+- Chocolatey Package Manager
+
+Steps to follow
+---------------
+
+In **Prism Central** > select :fa:`bars` **> Virtual Infrastructure > VMs**, and click **Create VM**.
+
+Fill out the following fields:
+
+- **Name** - *Initials*-Windows-ToolsVM
+- **Description** - (Optional) Description for your VM.
+- **vCPU(s)** - 1
+- **Number of Cores per vCPU** - 2
+- **Memory** - 4 GiB
+
+- Select **+ Add New Disk**
+    - **Type** - DISK
+    - **Operation** - Clone from Image Service
+    - **Image** - ToolsVM.qcow2
+    - Select **Add**
+
+- Select **Add New NIC**
+    - **VLAN Name** - Primary
+    - Select **Add**
+
+Click **Save** to create the VM.
+
+Power on the VM.
+
+Login to the VM via RDP or Console session, using the following credentials:
+
+- **Username** - Administrator
+- **password** - nutanix/4u
+
+
+.. _deploy_era:
 
 Deploying Era
 +++++++++++++
 
 Era is distributed as a virtual appliance that can be installed on either AHV or ESXi. In this lab you will deploy Era to your AHV cluster.
+
+Log into your **Prism Central** environment as described in :ref:`assign-cluster`
 
 In **Prism Central**, select :fa:`bars` **> Virtual Infrastructure > VMs**.
 
@@ -41,7 +98,7 @@ Fill out the following fields:
 - Select **+ Add New Disk**
     - **Type** - DISK
     - **Operation** - Clone from Image Service
-    - **Image** - Era.qcow2
+    - **Image** - ERA-Server-build-1.1.1.3.qcow2
     - Select **Add**
 
 - Select **Add New NIC**
@@ -59,13 +116,13 @@ Registering a Cluster
 
 In **Prism Central > VMs > List**, identify the IP address assigned to your Era VM using the **IP Addresses** column.
 
-Open \https://*ERA-VM-IP:8443*/ in a new browser tab.
+Open \https://*ERA-VM-IP*/ in a new browser tab.
 
 .. note::
 
   It may take up to 2 minutes for the Era interface to initialize after booting the VM.
 
-Select **I have read and agree to terms and conditions** and click **Continue**.
+Select **I have read and agree to terms and conditions**,click **Continue** and click **OK**.
 
 Enter **techX2019!** as the **admin** password and click **Set Password**.
 
@@ -80,7 +137,7 @@ On the **Welcome to Era** page, fill in the following information:
 - **Description** - (Optional) Description
 - **Address** - *Your Prism Element Cluster IP*
 - **Prism Element Administrator** - admin
-- **Password** - techX2019!
+- **Password** - *<CLUSTER PASSWORD>*
 
 .. figure:: images/3b.png
 
@@ -94,28 +151,36 @@ Select the **Default** storage container and click **Next**.
 
 .. figure:: images/3c.png
 
+.. note::
+
+  It may take some time to get to the next phase. Be patience....
+
 Select the **Primary** VLAN. This is the default network profile that Era will use when provisioning new databases. Do **not** select **Manage IP Address Pool**, as your AHV cluster already has IPAM (DHCP) configured for that network.
 
 .. figure:: images/3d.png
 
 Click **Next**.
 
-Once Era setup has completed, click **Get Started**.
+Once Era setup has completed, click **Get Started**. It may take up to 10-15 minutes max. before the gauge reaches 100%. There is a lot that needs to be made ready for the "one Click" experience...
 
 .. figure:: images/3e.png
 
 Provisioning a Database
 +++++++++++++++++++++++
 
-The initial release of Era supports the following Operating Systems and Database Servers:
+The current release of Era supports the following Operating Systems and Database Servers:
 
-- CentOS 6.9, 7.2, and 7.3
+**Operating Systems**
 - Oracle Linux 7.3
 - RHEL 6.9, 7.2, and 7.3
 - Windows Server 2012, Windows Server 2012 R2, and Windows Server 2016
+
+**Database servers**
 - Oracle 11.2.0.4.x, 12.1.0.2.x, and 12.2.0.1.x
 - PostgreSQL 9.x and 10.x
-- SQL Server 2008 R2, SQL Server 2012, SQL Server 2014, and SQL Server 2016
+- SQL Server 2008 R2, SQL Server 2012, SQL Server 2014, SQL Server 2016, and SQL Server 2017
+- MariaDB 5.5, MariaDB 10.0, MariaDB 10.1, MariaDB 10.2, and MariaDB 10.3
+- MySQL 2.6, MySQL 5.7, and MySQL 8.0
 
 Era can be used to provision database servers and databases on the registered Nutanix cluster, or you can register an existing source database running on the cluster. In this lab, you will provision a new PostgreSQL database server and database.
 
@@ -125,7 +190,7 @@ Select the **Era > Getting Started** drop down menu and click **Profiles**.
 
 .. figure:: images/3g.png
 
-Select **Software** and note there is an included profile for **PostgreSQL 10.4** shipped with Era. Additional PostgreSQL and Oracle profiles can be created by registering database server VMs with Era.
+Select **Software** and note there is an included profile for **PostgreSQL 10.4** shipped with Era, along with MariaDB and MySQL. Additional profiles can be created by registering database server VMs with Era.
 
 Select **Compute > DEFAULT_OOB_COMPUTE** and note the default Compute Profile creates a 4 core, 32GiB RAM VM to host the database. To reduce memory consumption in the shared lab environment, you will create a custom Compute Profile.
 

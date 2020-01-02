@@ -17,7 +17,7 @@
   era_deploy_and_register/era_deploy_and_register
   era_provision_postgresdb/era_provision_postgresdb
   era_clone_postgresdb/era_clone_postgresdb
-  era_rest_api/era_rest_api
+  .. era_rest_api/era_rest_api
 
 .. toctree::
   :maxdepth: 2
@@ -39,7 +39,7 @@ What's New
 ++++++++++
 
 - Workshop updated for the following software versions:
-    - AOS & PC 5.10.x
+    - AOS & PC 5.11.x
 
 - Optional Lab Updates:
 
@@ -50,48 +50,30 @@ Agenda
     - Era: Deploy and Register
     - Era: Provision Postgres DB
     - Era: Clone Postgres DB
-    - Era: REST API Explorer
 
 - Optional Labs
     - SSHKey Creation
 
-Introductions
-+++++++++++++
-
-- Name
-- Familiarity with Nutanix
-
-Initial Setup
-+++++++++++++
-
-- Take note of the *Passwords* being used.
-- Log into your virtual desktops (connection info below)
 
 Environment Details
 +++++++++++++++++++
 
-Nutanix Workshops are intended to be run in the Nutanix Hosted POC environment. Your cluster will be provisioned with all necessary images, networks, and VMs required to complete the exercises.
+The Nutanix Hosted POC environment has been setup for you. To follow the setup process so you can re-run this workshop, please follow the instructions `here <http://ntnx.tips/HOWTO>`_.
 
 Networking
 ..........
 
 Hosted POC clusters follow a standard naming convention:
 
-- **Cluster Name** - POC\ *XYZ*
-- **Subnet** - 10.**21**.\ *XYZ*\ .0
-- **Cluster IP** - 10.**21**.\ *XYZ*\ .37
-
-If provisioned from the marketing pool:
-
-- **Cluster Name** - MKT\ *XYZ*
-- **Subnet** - 10.**20**.\ *XYZ*\ .0
-- **Cluster IP** - 10.**20**.\ *XYZ*\ .37
+- **Cluster Name** - PHX-POC\ *XYZ*
+- **Subnet** - 10.42.\ *XYZ*\ .0
+- **Cluster IP** - 10.42.\ *XYZ*\ .37
 
 For example:
 
 - **Cluster Name** - POC055
-- **Subnet** - 10.21.55.0
-- **Cluster IP** - 10.21.55.37
+- **Subnet** - 10.42.55.0
+- **Cluster IP** - 10.42.55.37
 
 Throughout the Workshop there are multiple instances where you will need to substitute *XYZ* with the correct octet for your subnet, for example:
 
@@ -101,11 +83,11 @@ Throughout the Workshop there are multiple instances where you will need to subs
 
   * - IP Address
     - Description
-  * - 10.21.\ *XYZ*\ .37
+  * - 10.42.\ *XYZ*\ .37
     - Nutanix Cluster Virtual IP
-  * - 10.21.\ *XYZ*\ .39
+  * - 10.42.\ *XYZ*\ .39
     - **PC** VM IP, Prism Central
-  * - 10.21.\ *XYZ*\ .40
+  * - 10.42.\ *XYZ*\ .41
     - **DC** VM IP, NTNXLAB.local Domain Controller
 
 Each cluster is configured with 2 VLANs which can be used for VMs:
@@ -119,20 +101,20 @@ Each cluster is configured with 2 VLANs which can be used for VMs:
     - VLAN
     - DHCP Scope
   * - Primary
-    - 10.21.\ *XYZ*\ .1/25
-    - 0
-    - 10.21.\ *XYZ*\ .50-10.21.\ *XYZ*\ .124
+    - 10.42.\ *XYZ*\ .1/25
+    - *XYZ*
+    - 10.42.\ *XYZ*\ .50-10.21.\ *XYZ*\ .124
   * - Secondary
-    - 10.21.\ *XYZ*\ .129/25
+    - 10.42.\ *XYZ*\ .129/25
     - *XYZ1*
-    - 10.21.\ *XYZ*\ .132-10.21.\ *XYZ*\ .253
+    - 10.42.\ *XYZ*\ .132-10.21.\ *XYZ*\ .253
 
 Credentials
 ...........
 
 .. note::
 
-  The *<Cluster Password>* is unique to each cluster and will be provided by the leader of the Workshop.
+  The *<Cluster Password>*, in the below table, is unique to each cluster and will be provided.
 
 .. list-table::
   :widths: 25 35 40
@@ -154,7 +136,7 @@ Credentials
     - nutanix
     - *<Cluster Password>*
 
-Each cluster has a dedicated domain controller VM, **DC**, responsible for providing AD services for the **NTNXLAB.local** domain. The domain is populated with the following Users and Groups:
+Each cluster has a dedicated domain controller VM, **AutoDC2**, responsible for providing AD services for the **NTNXLAB.local** domain. The domain is populated with the following Users and Groups:
 
 .. list-table::
   :widths: 25 35 40
@@ -179,36 +161,26 @@ Each cluster has a dedicated domain controller VM, **DC**, responsible for provi
     - basicuser01-basicuser25
     - nutanix/4u
 
+.. _assign-cluster:
+
 Access Instructions
 +++++++++++++++++++
 
-The Nutanix Hosted POC environment can be accessed a number of different ways:
+To see which cluster has been assigned to you, please use the below table:
 
-Citrix XenDesktop
-.................
 
-https://citrixready.nutanix.com - *Accessible via the Citrix Receiver client or HTML5*
 
-**Nutanix Employees** - Use your NUTANIXDC credentials
+.. raw:: html
 
-**Non-Employees** - **Username:** POCxxx-User01 (up to POCxxx-User20), **Password:** *<Provided by Instructor>*
+  <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRbGExQjI8Xxdndg5OF7WElTDB3YUbeoWf8QfAdhM2Sy8bdW9rzzQO9489rF1RXNv_4jyIryd6wNBgW/pubhtml?gid=0&amp;single=true&amp;widget=true&amp;headers=false" style="position: relative; height: 600px; width: 98%; border: none"></iframe>
+
+.. note::
+    Write down your IP addresses on a piece of paper to make it a bit easier for yourself...
+
+
+
 
 Employee Pulse Secure VPN
 ..........................
 
 https://sslvpn.nutanix.com - Use your CORP credentials
-
-Non-Employee Pulse Secure VPN
-..............................
-
-https://lab-vpn.nutanix.com - **Username:** POCxxx-User01 (up to POCxxx-User20), **Password:** *<Provided by Instructor>*
-
-Under **Client Application Sessions**, click **Start** to the right of **Pulse Secure** to download the client.
-
-Install and open **Pulse Secure**.
-
-Add a connection:
-
-- **Type** - Policy Secure (UAC) or Connection Server
-- **Name** - HPOC VPN
-- **Server URL** - lab-vpn.nutanix.com
